@@ -212,7 +212,13 @@ class GraphsController < ApplicationController
         issues_by_created_on = @version.fixed_issues.group_by {|issue| issue.created_on.to_date }.sort
         issues_by_updated_on = @version.fixed_issues.group_by {|issue| issue.updated_on.to_date }.sort
         issues_by_closed_on = @version.fixed_issues.collect { |issue| issue if issue.closed? }.compact.group_by {|issue| issue.updated_on.to_date }.sort
-                    
+
+        # About the request if no issues were found.
+        if issues_by_created_on.empty? && issues_by_updated_on.empty? && issues_by_closed_on.empty?
+          render(:nothing => true)
+          return false
+        end
+      
         # Set the scope of the graph
         scope_end_date = issues_by_updated_on.keys.last
         scope_end_date = @version.effective_date if !@version.effective_date.nil? && @version.effective_date > scope_end_date
