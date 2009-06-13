@@ -104,7 +104,7 @@ class GraphsController < ApplicationController
         sql << " WHERE (%s)" % Project.allowed_to_condition(User.current, :view_issues)
         unless @project.nil?
             sql << " AND (project_id = #{@project.id}"
-            sql << "    OR project_id IN (%s)" % @project.descendants.active.visible.collect { |p| p.id }.join(',') unless @project.descendants.active.visible.empty?
+            sql << "    OR project_id IN (%s)" % @project.active_children.collect { |p| p.id }.join(',') unless @project.active_children.empty?
             sql << " )"
         end 
         sql << " GROUP BY project_id"
@@ -262,10 +262,10 @@ class GraphsController < ApplicationController
         find_optional_project
         if !@project.nil?
             ids = [@project.id]
-            ids += @project.descendants.active.visible.collect(&:id)
-            @issues = Issue.visible.find(:first, :conditions => ["#{Project.table_name}.id IN (?)", ids])
+            ids += @project.active_children.collect(&:id)
+            @issues = Issue.find(:first, :include => [:project], :conditions => ["#{Project.table_name}.id IN (?)", ids])
         else
-            @issues = Issue.visible.find(:first)
+            @issues = Issue.find(:first)
         end
     rescue ActiveRecord::RecordNotFound
         render_404
@@ -275,10 +275,10 @@ class GraphsController < ApplicationController
         find_optional_project
         if !@project.nil?
             ids = [@project.id]
-            ids += @project.descendants.active.visible.collect(&:id)
-            @issues = Issue.visible.find(:all, :include => [:status], :conditions => ["#{IssueStatus.table_name}.is_closed=? AND #{Project.table_name}.id IN (?)", false, ids])
+            ids += @project.active_children.collect(&:id)
+            @issues = Issue.find(:all, :include => [:status,:project], :conditions => ["#{IssueStatus.table_name}.is_closed=? AND #{Project.table_name}.id IN (?)", false, ids])
         else
-            @issues = Issue.visible.find(:all, :include => [:status], :conditions => ["#{IssueStatus.table_name}.is_closed=?", false])
+            @issues = Issue.find(:all, :include => [:status], :conditions => ["#{IssueStatus.table_name}.is_closed=?", false])
         end
     rescue ActiveRecord::RecordNotFound
         render_404
