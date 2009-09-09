@@ -221,7 +221,7 @@ class GraphsController < ApplicationController
         end
       
         # Set the scope of the graph
-        scope_end_date = issues_by_updated_on.keys.last
+        scope_end_date = issues_by_updated_on.to_a[-1][0] if issues_by_updated_on.size > 0 # Get the last "key".  Rails 2.3 change
         scope_end_date = @version.effective_date if !@version.effective_date.nil? && @version.effective_date > scope_end_date
         scope_end_date = Date.today if !@version.completed?
         line_end_date = Date.today
