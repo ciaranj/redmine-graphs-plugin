@@ -1,7 +1,7 @@
 require 'SVG/Graph/TimeSeries'
 
 class GraphsController < ApplicationController
-
+  unloadable
     ############################################################################
     # Initialization
     ############################################################################
