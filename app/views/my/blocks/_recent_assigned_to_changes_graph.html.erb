@@ -1,5 +1,15 @@
 <h3><%= l(:label_graphs_assigned_to_status_flow) %></h3>
 
 <div style="text-align: center">
-<%= tag("embed", :width => "280", :height => 280, :type => "image/svg+xml", :src => url_for(:controller => 'graphs', :action => 'recent_assigned_to_changes_graph')) %>
+<!--[if IE]>
+<object src="<%=url_for(:controller => 'graphs', :action => 'recent_assigned_to_changes_graph')%>" classid="image/svg+xml"
+        width="280" height="280"
+        id="racg">
+<![endif]-->
+<!--[if !IE]>-->
+<object data="<%=url_for(:controller => 'graphs', :action => 'recent_assigned_to_changes_graph')%>" type="image/svg+xml" 
+        width="280" height="280"
+        id="racg">
+<!--<![endif]-->
+</object>
 </div>
