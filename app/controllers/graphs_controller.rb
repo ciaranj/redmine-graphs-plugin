@@ -280,9 +280,7 @@ class GraphsController < ApplicationController
     def find_open_issues
         find_optional_project
         if !@project.nil?
-            ids = [@project.id]
-            ids += @project.active_children.collect(&:id)
-            @issues = Issue.find(:all, :include => [:status,:project], :conditions => ["#{IssueStatus.table_name}.is_closed=? AND #{Project.table_name}.id IN (?)", false, ids])
+            @issues = Issue.find(:all, :include => [:status,:project], :conditions => ["#{IssueStatus.table_name}.is_closed=? AND #{@project.project_condition(true)}", false])
         else
             @issues = Issue.find(:all, :include => [:status], :conditions => ["#{IssueStatus.table_name}.is_closed=?", false])
         end
