@@ -1,5 +1,9 @@
 <h3><%= l(:label_graphs_assigned_to_status_flow) %></h3>
 
 <div style="text-align: center">
-<%= tag("embed", :width => "280", :height => 280, :type => "image/svg+xml", :src => url_for(:controller => 'graphs', :action => 'recent_assigned_to_changes_graph')) %>
+<%= content_tag("object", "", :width => "280", :height => 280, :type => "image/svg+xml", :data => url_for(:controller => 'graphs', :action => 'recent_assigned_to_changes_graph')) %>
 </div>
+
+<% content_for :header_tags do %>
+    <%= javascript_include_tag 'sie', :defer => "defer" %>
+<% end %>

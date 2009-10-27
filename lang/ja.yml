@@ -1,0 +1,7 @@
+label_graphs: グラフ
+label_graphs_total_vs_closed_issues: 全チケットと終了チケット
+label_graphs_old_issues: 放置された未完了チケット
+label_graphs_issue_growth: 全チケットの時間変化
+label_graphs_issue_status_flow: 最近のステータス変化 (24時間以内)
+label_graphs_assigned_to_status_flow: 最近の担当者変化 (24時間以内)
+warning_no_issues: グラフに対応するチケットがありません。
