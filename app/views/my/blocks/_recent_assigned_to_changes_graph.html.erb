@@ -4,6 +4,8 @@
 <%= content_tag("object", "", :width => "280", :height => 280, :type => "image/svg+xml", :data => url_for(:controller => 'graphs', :action => 'recent_assigned_to_changes_graph')) %>
 </div>
 
-<% content_for :header_tags do %>
-    <%= javascript_include_tag 'sie', :defer => "defer" %>
+<% content_for :header_tags do 
+  if !instance_variable_get("@content_for_header_tags").to_s.include?("/javascripts/sie.js") %>
+   <%= javascript_include_tag 'sie', :defer => "defer" %>
+ <%end%>
 <% end %>
