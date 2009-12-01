@@ -104,9 +104,7 @@ class GraphsController < ApplicationController
         sql << " LEFT JOIN #{Project.table_name} ON #{Issue.table_name}.project_id = #{Project.table_name}.id"
         sql << " WHERE (%s)" % Project.allowed_to_condition(User.current, :view_issues)
         unless @project.nil?
-            sql << " AND (project_id = #{@project.id}"
-            sql << "    OR project_id IN (%s)" % @project.active_children.collect { |p| p.id }.join(',') unless @project.active_children.empty?
-            sql << " )"
+            sql << "AND (#{@project.project_condition(true)})"
         end 
         sql << " GROUP BY project_id"
         sql << " ORDER BY issue_count DESC"
@@ -268,9 +266,7 @@ class GraphsController < ApplicationController
     def confirm_issues_exist
         find_optional_project
         if !@project.nil?
-            ids = [@project.id]
-            ids += @project.active_children.collect(&:id)
-            @issues = Issue.find(:first, :include => [:project], :conditions => ["#{Project.table_name}.id IN (?)", ids])
+          @issues = Issue.find(:first, :include => [:project], :conditions => ["#{@project.project_condition(true)}"])
         else
             @issues = Issue.find(:first)
         end
